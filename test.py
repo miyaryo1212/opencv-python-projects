@@ -30,10 +30,11 @@ if cap.isOpened() == False:
     sys.exit()
 
 while(cap.isOpened()):
-    ret, frame = cap.read()
-    frame = cv2.flip(frame, 1)
+    ret, frame_bgr = cap.read()
+    frame_bgr = cv2.flip(frame_bgr, 1)
+    frame_hsv = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2HSV)
 
-    imgBox = frame[boxFromY: boxToY, boxFromX: boxToX]
+    imgBox = frame_bgr[boxFromY: boxToY, boxFromX: boxToX]
     b = imgBox.T[0].flatten().mean()
     g = imgBox.T[1].flatten().mean()
     r = imgBox.T[2].flatten().mean()
@@ -42,21 +43,21 @@ while(cap.isOpened()):
     targetColor_g = 0
     targetColor_r = 255
 
-    cv2.rectangle(frame, (videoWidth - 130, videoHeight - 90),
+    cv2.rectangle(frame_bgr, (videoWidth - 130, videoHeight - 90),
                   (videoWidth - 20, videoHeight-20), (195, 195, 195), thickness=-1)
 
-    cv2.rectangle(frame, (videoWidth - 75, videoHeight - 75),
+    cv2.rectangle(frame_bgr, (videoWidth - 75, videoHeight - 75),
                   (videoWidth - 35, videoHeight - 35), (b, g, r), thickness=-1)
 
-    cv2.rectangle(frame, (videoWidth - 115, videoHeight - 75),
+    cv2.rectangle(frame_bgr, (videoWidth - 115, videoHeight - 75),
                   (videoWidth - 75, videoHeight - 35), (targetColor_b, targetColor_g, targetColor_r), thickness=-1)
                   
-    cv2.rectangle(frame, (rectangleFromX, rectangleFromY),
+    cv2.rectangle(frame_bgr, (rectangleFromX, rectangleFromY),
                   (rectangleToX, rectangleToY), (0, 255, 0))
 
     if ret:
-        # Display the resulting frame
-        cv2.imshow('Here!', frame)
+        cv2.imshow("Video - BGR", frame_bgr)
+        cv2.imshow("Video - HSV", frame_hsv)
         # Press esc to exit
         if cv2.waitKey(20) & 0xFF == 27:
             break
