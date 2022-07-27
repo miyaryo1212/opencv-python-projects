@@ -15,10 +15,10 @@ print(f'''{"Width: "}{videoWidth}
 {"Height: "}{videoHeight}
 {"FPS: "}{videoFPS}''')
 
-rectangleFromX = int(videoWidth / 2 - videoWidth / 20)
-rectangleFromY = int(videoHeight * 4 / 5 - videoHeight / 24)
-rectangleToX = int(videoWidth / 2 + videoWidth / 20)
-rectangleToY = int(videoHeight * 4 / 5 + videoHeight / 24)
+rectangleFromX = int(videoWidth / 2 - videoWidth / 25)
+rectangleFromY = int(videoHeight * 4 / 5 - videoHeight / 30)
+rectangleToX = int(videoWidth / 2 + videoWidth / 25)
+rectangleToY = int(videoHeight * 4 / 5 + videoHeight / 30)
 
 boxFromX = rectangleFromX + 1
 boxFromY = rectangleFromY + 1
@@ -38,21 +38,18 @@ while(cap.isOpened()):
     g = imgBox.T[1].flatten().mean()
     r = imgBox.T[2].flatten().mean()
 
-    targetColor_b = 255
-    targetColor_g = 153
-    targetColor_r = 222
+    targetColor_b = 0
+    targetColor_g = 0
+    targetColor_r = 255
 
-    cv2.rectangle(frame, (videoWidth - 135, videoHeight - 90),
-                  (videoWidth - 15, videoHeight-52), (0, 0, 0), thickness=-1)
+    cv2.rectangle(frame, (videoWidth - 130, videoHeight - 90),
+                  (videoWidth - 20, videoHeight-20), (195, 195, 195), thickness=-1)
 
-    cv2.rectangle(frame, (videoWidth - 135, videoHeight - 51),
-                  (videoWidth - 15, videoHeight - 15), (255, 255, 255), thickness=-1)
+    cv2.rectangle(frame, (videoWidth - 75, videoHeight - 75),
+                  (videoWidth - 35, videoHeight - 35), (b, g, r), thickness=-1)
 
-    cv2.rectangle(frame, (videoWidth - 75, videoHeight - 85),
-                  (videoWidth - 25, videoHeight - 20), (b, g, r), thickness=-1)
-
-    cv2.rectangle(frame, (videoWidth - 125, videoHeight - 85),
-                  (videoWidth - 76, videoHeight - 20), (targetColor_b, targetColor_g, targetColor_r), thickness=-1)
+    cv2.rectangle(frame, (videoWidth - 115, videoHeight - 75),
+                  (videoWidth - 75, videoHeight - 35), (targetColor_b, targetColor_g, targetColor_r), thickness=-1)
                   
     cv2.rectangle(frame, (rectangleFromX, rectangleFromY),
                   (rectangleToX, rectangleToY), (0, 255, 0))
