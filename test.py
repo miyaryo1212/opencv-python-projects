@@ -1,6 +1,7 @@
 # Import only if not previously imported
 import cv2
 import sys
+import numpy as np
 
 from cv2 import rectangle
 # In VideoCapture object either Pass address of your Video file
@@ -30,9 +31,12 @@ if cap.isOpened() == False:
     sys.exit()
 
 while(cap.isOpened()):
-    ret, frame_bgr = cap.read()
-    frame_bgr = cv2.flip(frame_bgr, 1)
-    frame_hsv = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2HSV)
+    ret, img = cap.read()
+    img = cv2.flip(img, 1)
+    frame_bgr = img
+    frame_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    ### BGR形式での処理 ###
 
     imgBox = frame_bgr[boxFromY: boxToY, boxFromX: boxToX]
     b = imgBox.T[0].flatten().mean()
@@ -45,19 +49,27 @@ while(cap.isOpened()):
 
     cv2.rectangle(frame_bgr, (videoWidth - 130, videoHeight - 90),
                   (videoWidth - 20, videoHeight-20), (195, 195, 195), thickness=-1)
-
     cv2.rectangle(frame_bgr, (videoWidth - 75, videoHeight - 75),
                   (videoWidth - 35, videoHeight - 35), (b, g, r), thickness=-1)
-
     cv2.rectangle(frame_bgr, (videoWidth - 115, videoHeight - 75),
                   (videoWidth - 75, videoHeight - 35), (targetColor_b, targetColor_g, targetColor_r), thickness=-1)
-                  
     cv2.rectangle(frame_bgr, (rectangleFromX, rectangleFromY),
                   (rectangleToX, rectangleToY), (0, 255, 0))
+
+    ### HSV形式での処理 ###
+
+    lower = np.array([90, 64, 0])
+    upper = np.array([150, 255, 255])
+
+    frame_mask = cv2.inRange(frame_hsv, lower, upper)
+
+    dst = cv2.bitwise_and(img, img, mask=frame_mask)
 
     if ret:
         cv2.imshow("Video - BGR", frame_bgr)
         cv2.imshow("Video - HSV", frame_hsv)
+        cv2.imshow("img", dst)
+
         # Press esc to exit
         if cv2.waitKey(20) & 0xFF == 27:
             break
